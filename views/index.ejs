@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head.ejs') %>
+</head>
+<body>
+    <%- include('./partials/nav.ejs')  %> 
+
+    <div class="container">
+        <div class="row m-4">
+            <div class="col">
+                <div class="table-responsive">
+                    <table class="table table-striped text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>E-mail</th>
+                                <th>Phone</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (users.length > 0) { %>
+                                <% users.forEach((user,idx) => {  %> 
+                                    <tr class="align-middle">
+                                        <td><%= idx %></td>
+                                        <td><img class="img-thumbnail" src="<%= user.image%>" width="50" alt="image-<%= user.name %>"></td>
+                                        <td><%= user.name %></td>
+                                        <td><%= user.email %></td>
+                                        <td><%= user.phone %></td>
+                                        <td>
+                                            <a href="/edit/<%= user._id %>" class="text-success"><i class='bx bxs-edit-alt bx-sm'></i></a>
+                                            <a href="/delete/<%= user._id %>" class="text-danger"><i class='bx bxs-trash-alt bx-sm' ></i></a>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+                            <% } else {%>
+                                <p>No users around here . . .</p>
+                            <% } %> 
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('./partials/footer.ejs')  %> 
+</body>
+</html>

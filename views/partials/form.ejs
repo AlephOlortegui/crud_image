@@ -1,0 +1,18 @@
+<% if(blog) {%>
+    <input type="hidden" name="_method" value="PATCH">
+    <label for="title">Blog title:</label>
+    <input type="text" id="title" value="<%= blog.title %>" name='title' required />
+    <label for="snippet">Blog snippet:</label>
+    <input type="text" id="snippet" value="<%= blog.snippet %>" name='snippet' required />
+    <label for="body">Blog body:</label>
+    <textarea type="text" id="body" name='body' required><%= blog.body %></textarea>
+    <button type="submit">Submit</button>
+<% } else { %>
+    <label for="title">Blog title:</label>
+    <input type="text" id="title" name='title' required />
+    <label for="snippet">Blog snippet:</label>
+    <input type="text" id="snippet" name='snippet' required />
+    <label for="body">Blog body:</label>
+    <textarea type="text" id="body" name='body' required></textarea>
+    <button type="submit">Submit</button>
+<% } %>
