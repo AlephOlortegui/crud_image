@@ -1,96 +1,100 @@
 const User = require("../models/User");
-const multer = require('multer')
-const fs = require('fs')
+const fs = require('fs');
+const { listenerCount } = require("../models/User");
 
-let storage = multer.diskStorage({
-    destination: function (request, file, callback) {
-      //callback(,path (folder) were we will move the image)
-        callback(null, 'uploads')
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + file.originalname
-        cb(null, file.fieldname + '-' + uniqueSuffix)
+const displayTable = async (req,res) => { 
+    try {
+        const users = await User.find().sort({createdAt: -1})
+        res.render('index', {myTitle: 'Home', users}) 
+    } catch (error) {
+        console.log(err)
     }
-})
-
-let upload = multer({storage}).single('image') //name attribute = image
-
-const getUsers = async (req,res) => {
-    User.find().sort({createdAt: -1}).then(result => {
-        res.render('index', {myTitle: 'Home', users: result}) 
-    }).catch(err => console.log(err))
 }
 
-const get_create = async (req,res) => { res.render('create', {myTitle: 'Create User'}) }
+const createPage = (req,res) => { 
+    res.render('create', {myTitle: 'Create User'}) 
+}
 
 const postUser = async (req,res) => { 
-    console.log('************************* REQ BODY  POST METHOD **')
-    console.log(req.body) 
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        image: req.file.filename
-    })
-    user.save()
-    .then(() => {
+    try {
+        const {name,email,phone} = req.body
+        await User.create({
+            name,
+            email,
+            phone,
+            image: req.file.filename
+        })
         res.redirect('/')
-    })
-    .catch(err => console.log(err))
-}
-const get_one_user = async (req,res) => { 
-    const id = req.params.id;
-    User.findById(id)
-    .then(result => {
-        res.render('edit', {myTitle: 'Edit Blog', user: result})
-    })
-    .catch(err => {
-        console.log(err);
-    })
- }
-
- const patch_one_user = (req,res) => { 
-    const id = req.params.id;
-    console.log('************************* REQ BODY  PATCH METHOD **')
-    console.log(req.body)
-    let new_image = '';
-    if(req.file){
-        new_image = req.file.filename;
-        try{
-            fs.unlinkSync(`./uploads/${req.body.old_image}`) // name attribute on the form
-        } catch(err) {console.log(err)}
-    } else{
-        new_image = req.body.old_image;
+    } catch (err) {
+        console.log(err)
     }
-
-    User.findByIdAndUpdate(id, {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        image: new_image
-    }, {new: true}).then(result => {
-        console.log(result); return res.redirect('/')
-    }).catch(err => console.log(err))
 }
 
-const delete_one = (req,res) => { 
-    const id = req.params.id;
-    User.findByIdAndRemove(id).then(result => {
-        if(result.image != ''){
+const deleteUser = async (req,res) => { 
+    try {
+        const id = req.params.id;
+        const userRemoved = await User.findByIdAndRemove(id)
+        if(userRemoved.image != ''){
             try{
                 fs.unlinkSync(`./uploads/${result.image}`)
             } catch(err) {console.log(err)}
         }
         res.redirect('/')
-    }).catch(err => console.log(err))
+    } catch (err) {
+        console.log(err)
+    }
  }
 
+
+const get_one_user = async (req,res) => { 
+    try {
+        const id = req.params.id;
+        const userToEdit = await User.findById(id)
+        if(!userToEdit){
+            throw Error('No user found')
+        }
+        return res.render('edit', {myTitle: 'Edit Blog', user: userToEdit})
+    } catch (err) {
+        console.log(err.message)
+    }
+ }
+
+ const patch_one_user = async (req,res) => { 
+    try {
+        const {id} = req.params
+        const {name,email,phone} = req.body
+        let new_image = '';
+
+        if(req.file){
+            new_image = req.file.filename;
+            try{
+                fs.unlinkSync(`./uploads/${req.body.old_image}`) // name attribute on the form
+            } catch(err) {console.log(err)}
+        } else{
+            new_image = req.body.old_image;
+        }
+
+        const userUpdated = await User.findByIdAndUpdate({_id:id}, {
+            name,
+            email,
+            phone,
+            image: new_image
+        })
+
+        if(!userUpdated){
+            throw Error('No user found')
+        }
+        return res.redirect('/')
+    } catch (err) {
+        console.log(err.message)
+    }
+}
+
 module.exports = {
-    getUsers,
-    get_create,
-    upload,
+    displayTable,
+    createPage,
     postUser,
+    deleteUser,
     get_one_user,
     patch_one_user,
-    delete_one
 }

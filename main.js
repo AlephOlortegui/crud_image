@@ -1,16 +1,15 @@
-require('dotenv').config()
+require('dotenv').config({path: './config/.env'})
+require('colors');
+
 const express = require('express')
-const mongoose = require('mongoose')
 const userRouter = require('./routes/userRouter')
+const connectDB = require('./config/db')
+const morgan = require('morgan')
+
 const app = express()
 
 //DB
-mongoose.connect(process.env.MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true})
-    .then(() => {
-        const PORT = process.env.PORT || 4000;
-        app.listen(PORT, console.log(`port server running on ${PORT}`))
-    })
-    .catch(err => console.log(err))
+connectDB(app)
 
 //set engine
 app.set('view engine', 'ejs')
@@ -19,8 +18,11 @@ app.use(express.static("public"))
 app.use(express.static("uploads"))
 //middlewares
 app.use(express.urlencoded({extended: false})) /* When extended is set to false, the built-in querystring library is used,
- which only supports key-value pairs and does not support nested objects or arrays. */
- app.use(express.json())
+which only supports key-value pairs and does not support nested objects or arrays. */
+
+if(process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 
 //  app.get('/', (req,res) => res.redirect('/users'))
 app.use("/",userRouter)

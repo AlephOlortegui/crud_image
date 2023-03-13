@@ -9,20 +9,20 @@
     <div class="container">
         <div class="row m-4">
             <div class="col">
-                <div class="table-responsive">
-                    <table class="table table-striped text-center">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>E-mail</th>
-                                <th>Phone</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% if (users.length > 0) { %>
+                <% if (users.length > 0) { %>
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>E-mail</th>
+                                    <th>Phone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <% users.forEach((user,idx) => {  %> 
                                     <tr class="align-middle">
                                         <td><%= idx %></td>
@@ -36,13 +36,14 @@
                                         </td>
                                     </tr>
                                 <% }) %>
-                            <% } else {%>
-                                <p>No users around here . . .</p>
-                            <% } %> 
-                            
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else {%>
+                    <div class="alert alert-danger" role="alert">
+                        No users on the MongoDB . . . Go and Add a new User!
+                    </div>
+                <% } %> 
             </div>
         </div>
     </div>
