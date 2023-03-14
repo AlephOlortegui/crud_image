@@ -33,8 +33,15 @@
                                 <img src="/<%= user.image %>" alt="<%= user.name %>" width="100" class="img-thumbnail mt-1">
                                 <input type="hidden" name="old_image" value="<%= user.image %>">
                             </div>
-                            <div class="mb-3 d-grid">
-                                <input type="submit" value="Update User" class="btn btn-info btn-lg" required>
+                            <div class="mb-3  mx-auto">
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="submit" class="w-100 btn btn-info btn-lg">Update User</button>
+                                    </div>
+                                    <div class="col">
+                                        <a href="/" class="w-100 btn btn-danger btn-lg">Cancel</a> 
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>

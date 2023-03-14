@@ -3,3 +3,46 @@ a.navbar-brand.center_icon{
     align-items: center;
     justify-content: center;
 }
+
+.notFound{
+    position: relative;
+}
+.notFound h1,
+.notFound h6{
+    -webkit-animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+	        animation: tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
+
+@keyframes tracking-in-expand {
+    0% {
+      letter-spacing: -0.5em;
+      opacity: 0;
+    }
+    40% {
+      opacity: 0.6;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+.notFound h1{
+    font-size: 18rem;
+}
+.notFound h6{
+    font-size: 4rem;
+    margin-top: -3rem;
+    margin-left: 1rem;
+}
+.notFound img{
+    position: absolute;
+    z-index: -1;
+}
+.notFound .browser_img{
+    top: 0;
+    left: 15%;
+}
+.notFound .robot_img{
+    right: 15%;
+    bottom: 0;
+}

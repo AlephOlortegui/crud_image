@@ -26,3 +26,5 @@ if(process.env.NODE_ENV === 'development') {
 
 //  app.get('/', (req,res) => res.redirect('/users'))
 app.use("/",userRouter)
+
+app.use((req,res) => {res.status(404).render('404',{myTitle: '404 Page'})})

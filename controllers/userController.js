@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const fs = require('fs');
-const { listenerCount } = require("../models/User");
 
 const displayTable = async (req,res) => { 
     try {
@@ -36,7 +35,7 @@ const deleteUser = async (req,res) => {
         const userRemoved = await User.findByIdAndRemove(id)
         if(userRemoved.image != ''){
             try{
-                fs.unlinkSync(`./uploads/${result.image}`)
+                fs.unlinkSync(`./uploads/${userRemoved.image}`)
             } catch(err) {console.log(err)}
         }
         res.redirect('/')
